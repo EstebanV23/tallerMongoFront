@@ -8,7 +8,7 @@ export default function Alert ({ message, type }) {
       initial='initial'
       animate='animate'
       exit='exit'
-      className='fixed right-1 bottom-10 py-5 px-8 text-sm rounded-xl shadow-2xl z-20 border-2 bg-slate-200 border-slate-300 md:px-12 md:bottom-20 md:right-20 md:text-lg'
+      className='fixed right-1 bottom-10 py-2 px-8 text-sm rounded-md shadow-lg border w-full text-center max-w-[300px] z-20 bg-white md:px-12 md:bottom-20 md:right-20 md:text-base'
     >
       <motion.p variants={variantsAlertItem}>
         {message}

@@ -19,6 +19,20 @@ const validationRegisterInputs = {
       minLength: 'The password must be at least 8 characters long'
     }
   },
+  confirmPassword: {
+    validate: {
+      required: true,
+      validate: function (cb) {
+        return (values) => {
+          cb(values)
+        }
+      }
+    },
+    messages: {
+      required: 'Password is required',
+      validate: 'Passwords do not match'
+    }
+  },
   documentId: {
     validate: {
       required: true,

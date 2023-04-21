@@ -15,7 +15,20 @@ export default function RegisterForm () {
 
   function submitData (values) {
     setUser(values)
-    newUser(values)
+    const response = newUser(values)
+    if (!response.error) {
+      reset(_ => (
+        {
+          firstName: '',
+          firstSurname: '',
+          email: '',
+          documentId: '',
+          typeDocument: '',
+          password: '',
+          confirmPassword: ''
+        }
+      ))
+    }
   }
 
   useRestartError()
@@ -31,9 +44,10 @@ export default function RegisterForm () {
         exit='initial'
         className='flex flex-col gap-3 w-full items-stretch transition-all duration-300 ease-in-out p-4'
       >
+        <motion.p variants={itemVariants} className='text-sm text-gray-500'>* Fields are required</motion.p>
         <Input
           errors={errors}
-          label='First Name'
+          label='* First Name'
           name='firstName'
           placeholder='Brayan'
           register={register}
@@ -43,7 +57,7 @@ export default function RegisterForm () {
         />
         <Input
           errors={errors}
-          label='First Surname'
+          label='* First Surname'
           name='firstSurname'
           placeholder='Villamizar'
           register={register}
@@ -53,7 +67,7 @@ export default function RegisterForm () {
         />
         <Input
           errors={errors}
-          label='Email'
+          label='* Email'
           name='email'
           placeholder='Youremail@domain.com'
           register={register}
@@ -63,7 +77,7 @@ export default function RegisterForm () {
         />
         <Input
           errors={errors}
-          label='Document'
+          label='* Document'
           name='documentId'
           placeholder='1993823482'
           register={register}
@@ -77,14 +91,15 @@ export default function RegisterForm () {
           register={register}
           variants={itemVariants}
           validation={validationRegisterInputs}
+          label='* Type Document'
         >
-          <option value=''>Type Document</option>
+          <option value=''>...</option>
           <option value='cc'>Document Id</option>
           <option value='ti'>Card id</option>
         </Select>
         <Input
           errors={errors}
-          label='Password'
+          label='* Password'
           name='password'
           placeholder='********'
           register={register}
@@ -94,13 +109,18 @@ export default function RegisterForm () {
         />
         <Input
           errors={errors}
-          label='Confirm Password'
+          label='* Confirm Password'
           name='confirmPassword'
           placeholder='********'
           register={register}
           type={!watch('visible') ? 'password' : 'text'}
           validation={validationRegisterInputs}
           variants={itemVariants}
+          callback={value => {
+            if ((watch('password') !== value)) {
+              return 'Passwords do not match'
+            }
+          }}
         />
         <VisiblePassword
           register={register}
@@ -120,6 +140,7 @@ export default function RegisterForm () {
               {error}
             </motion.p>}
         </AnimatePresence>
+        <motion.p variants={itemVariants} className='text-sm text-center text-gray-500 w-[90%] m-auto my-3'>If you register here, you will register as student, if you want to create account as admin, contact us and we are going to give you if you have the features necessary</motion.p>
         <MainButton
           text='Register'
           type='submit'

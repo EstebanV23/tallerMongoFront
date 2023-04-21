@@ -46,7 +46,7 @@ export default function UserProvider ({ children }) {
     setLoading(false)
     if (dataResponse.error) {
       setError(dataResponse.error)
-      return
+      return dataResponse
     }
     setAlertActive({ message: 'User created successfully', type: 'success' })
     navigate('/')

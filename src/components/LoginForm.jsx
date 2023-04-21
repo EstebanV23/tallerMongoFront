@@ -7,6 +7,7 @@ import MainButton from './MainButton'
 import { UserContext } from '../providers/UserProvider'
 import { AnimatePresence, motion } from 'framer-motion'
 import { itemVariants, variantsError, variantsForm } from '../constans/variantsForm'
+import useRestartError from '../customHooks/useRestartError'
 
 export default function LoginForm () {
   const { formState: { errors }, register, handleSubmit, watch } = useForm()
@@ -17,21 +18,12 @@ export default function LoginForm () {
     logIn(values)
   }
 
-  useEffect(() => {
-    let timeOut
-    if (error) {
-      timeOut = setTimeout(() => {
-        setError(null)
-      }, 3000)
-    }
-    return () => {
-      clearTimeout(timeOut)
-    }
-  }, [error])
+  useRestartError()
 
   return (
     <form
       onSubmit={handleSubmit(submitData)}
+      className='min-h-fit flex flex-col justify-center'
     >
       <motion.div
         variants={variantsForm}
