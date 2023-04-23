@@ -22,8 +22,7 @@ export default function LoginPage () {
     <div className='bg-gradient-to-tr from-gray-800 to-gray-300 min-h-screen flex'>
       <img src='the-uts.webp' className='h-screen hidden left-0 top-0 object-cover w-[40%] opacity-100 md:block' />
       <div className='grid h-screen place-items-center w-full'>
-        <div className='rounded-xl bg-gradient-to-b from-slate-100 to-slate-200 w-full max-w-[550px] z-10 shadow-xl p-2 overflow-y-auto h-[80vh] form-scroll'>
-          <img src='logo.png' alt='' />
+        <div className='rounded-xl bg-gradient-to-b from-slate-100 to-slate-200 w-full max-w-[550px] z-10 shadow-2xl p-2'>
           <div className='w-full flex flex-col gap-2 md:flex-row'>
             {
               ITEMS.map((item, index) => (
@@ -31,9 +30,14 @@ export default function LoginPage () {
               ))
             }
           </div>
-          <AnimatePresence>
-            {ITEMS[layout].component}
-          </AnimatePresence>
+          <div className='h-[80vh] max-h-[550px] flex flex-col'>
+            <img src='uts-logo.png' className='w-1/2 mx-auto' alt='' />
+            <div className='overflow-y-auto form-scroll grid h-full'>
+              <AnimatePresence key={112233}>
+                {ITEMS[layout].component}
+              </AnimatePresence>
+            </div>
+          </div>
         </div>
       </div>
       <PatterSvg className='fixed left-0 top-0 h-screen w-screen -z-0 opacity-5' />

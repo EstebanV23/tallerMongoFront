@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 import VisiblePassword from './VisiblePassword'
 import MainButton from './MainButton'
 import useRestartError from '../customHooks/useRestartError'
+import TypeDocumentsOptions from './TypeDocumentsOptions'
 
 export default function RegisterForm () {
   const { formState: { errors }, register, handleSubmit, watch, reset } = useForm()
@@ -44,6 +45,7 @@ export default function RegisterForm () {
         exit='initial'
         className='flex flex-col gap-3 w-full items-stretch transition-all duration-300 ease-in-out p-4'
       >
+        <motion.p variants={itemVariants} className='text-sm text-gray-500'>Rebember: you account have the email that you register in PruebaSaberPro and did create with your document id as password, if you try to create one account and your document id already account, you should contact us for recover your account</motion.p>
         <motion.p variants={itemVariants} className='text-sm text-gray-500'>* Fields are required</motion.p>
         <Input
           errors={errors}
@@ -75,16 +77,6 @@ export default function RegisterForm () {
           validation={validationRegisterInputs}
           variants={itemVariants}
         />
-        <Input
-          errors={errors}
-          label='* Document'
-          name='documentId'
-          placeholder='1993823482'
-          register={register}
-          type='text'
-          validation={validationRegisterInputs}
-          variants={itemVariants}
-        />
         <Select
           errors={errors}
           name='typeDocument'
@@ -93,39 +85,16 @@ export default function RegisterForm () {
           validation={validationRegisterInputs}
           label='* Type Document'
         >
-          <option value=''>...</option>
-          <option value='cc'>Document Id</option>
-          <option value='ti'>Card id</option>
+          <TypeDocumentsOptions />
         </Select>
         <Input
           errors={errors}
-          label='* Password'
-          name='password'
-          placeholder='********'
+          label='* Document'
+          name='documentId'
+          placeholder='1993823482'
           register={register}
-          type={!watch('visible') ? 'password' : 'text'}
+          type='text'
           validation={validationRegisterInputs}
-          variants={itemVariants}
-        />
-        <Input
-          errors={errors}
-          label='* Confirm Password'
-          name='confirmPassword'
-          placeholder='********'
-          register={register}
-          type={!watch('visible') ? 'password' : 'text'}
-          validation={validationRegisterInputs}
-          variants={itemVariants}
-          callback={value => {
-            if ((watch('password') !== value)) {
-              return 'Passwords do not match'
-            }
-          }}
-        />
-        <VisiblePassword
-          register={register}
-          name='visible'
-          watch={watch}
           variants={itemVariants}
         />
         <AnimatePresence>

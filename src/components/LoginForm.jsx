@@ -11,7 +11,7 @@ import useRestartError from '../customHooks/useRestartError'
 
 export default function LoginForm () {
   const { formState: { errors }, register, handleSubmit, watch } = useForm()
-  const { setUser, error, setError, logIn } = useContext(UserContext)
+  const { setUser, error, logIn } = useContext(UserContext)
 
   function submitData (values) {
     setUser(values)
@@ -58,7 +58,7 @@ export default function LoginForm () {
           watch={watch}
           variants={itemVariants}
         />
-        <AnimatePresence>
+        <AnimatePresence key={123312}>
           {error &&
             <motion.p
               variants={variantsError}
