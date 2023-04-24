@@ -8,6 +8,7 @@ import { useContext, useState } from 'react'
 import RenderConditional from './RenderConditional'
 import Modal from './Modal'
 import { UserContext } from '../providers/UserProvider'
+import AgreeContent from './AgreeContent'
 
 export default function InfoRowStudent ({ user, setChange }) {
   const navigate = useNavigate()
@@ -36,7 +37,7 @@ export default function InfoRowStudent ({ user, setChange }) {
         <Td>{phone}</Td>
         <Td>{registerNumber}</Td>
         {denied
-          ? <Td colSpan={headTables.length} className='bg-red-400 text-left'>Denied</Td>
+          ? <Td colSpan={headTables.length - 10} className='bg-red-300 text-left text-red-600'>Denied</Td>
           : <><Td>{saberProScore}</Td>
             <Td>{saberProScoreLevel}</Td>
             <Td>{writtenCommunication}</Td>
@@ -64,11 +65,7 @@ export default function InfoRowStudent ({ user, setChange }) {
       </Tr>
       <RenderConditional condition={open}>
         <Modal functionExecute={registerDelete} setOpen={setOpen}>
-          <p className='text-3xl'>Do you want continue with the action?</p>
-          <div className='flex m-auto gap-3'>
-            <SecondaryButton color='green' onClick={() => registerDelete()}>Yes</SecondaryButton>
-            <SecondaryButton color='red' onClick={() => setOpen(false)}>Cancel</SecondaryButton>
-          </div>
+          <AgreeContent title='Do you want continue with the action?' setOpen={setOpen} functionExe={registerDelete} />
         </Modal>
       </RenderConditional>
     </>

@@ -10,6 +10,8 @@ import updateStudentInfo from '../services/updateStudentInfo'
 import updateScoreStudent from '../services/updateScoreStudent'
 import deleteStudent from '../services/deleteStudent'
 import getAvailablesUsers from '../services/getAvailablesUsers'
+import crateStudent from '../services/crateStudent'
+import studentDeniedService from '../services/studentDeniedService'
 
 export const UserContext = createContext()
 
@@ -82,7 +84,6 @@ export default function UserProvider ({ children }) {
   }
 
   const updateInfoUserStudent = async (values, user) => {
-    console.log({ values })
     let userReturn = user
     try {
       setLoading(true)
@@ -113,19 +114,20 @@ export default function UserProvider ({ children }) {
     return userReturn
   }
 
-  const newUser = async ({ firstName, firstSurname, typeDocument, documentId, email, password }) => {
+  const newUser = async ({ firstName, firstSurname, typeDocument, documentId, email }) => {
     setLoading(true)
     const roles = await getRole(STUDENT)
     const role = roles.find(role => role.nameId === STUDENT)?.id
-    const sendData = { firstName, firstSurname, typeDocument, documentId, email, password, role: { id: role } }
+    const sendData = { firstName, firstSurname, typeDocument, documentId, email, role: { id: role } }
     const dataResponse = await registerService(sendData)
     setLoading(false)
     if (dataResponse.error) {
       setError(dataResponse.error)
+      setAlertActive({ message: dataResponse.error, type: 'error' })
       return dataResponse
     }
     setAlertActive({ message: 'User created successfully', type: 'success' })
-    navigate('/')
+    return dataResponse
   }
 
   const updateScore = async (data, studentId) => {
@@ -146,6 +148,16 @@ export default function UserProvider ({ children }) {
       : setAlertActive({ message: 'Delete successfully', type: 'success' })
   }
 
+  const newStudent = async (data, userId, name) => {
+    setLoading(true)
+    const response = await crateStudent(data, userId, user.id)
+    setLoading(false)
+    response.error
+      ? setAlertActive({ message: response.error, type: 'error' })
+      : setAlertActive({ message: `Register assigment to ${name} successfully`, type: 'success' })
+    return response
+  }
+
   const availablesUser = async () => {
     setLoading(true)
     const data = await getAvailablesUsers(user.id)
@@ -161,6 +173,17 @@ export default function UserProvider ({ children }) {
 
   const resetAlert = () => {
     setAlertActive(initialAlert)
+  }
+
+  const denyStudent = async (data, studentId) => {
+    setLoading(true)
+    const dataRequest = { denied: data }
+    const response = await studentDeniedService(dataRequest, studentId, user.id)
+    setLoading(false)
+    response.error
+      ? setAlertActive({ message: response.error, type: 'error' })
+      : setAlertActive({ message: 'You have changed the denied status ', type: 'success' })
+    return response
   }
 
   const values = {
@@ -179,7 +202,9 @@ export default function UserProvider ({ children }) {
     updateScore,
     deleteRegister,
     availablesUser,
-    loading
+    loading,
+    newStudent,
+    denyStudent
   }
 
   return (

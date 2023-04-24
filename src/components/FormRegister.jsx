@@ -5,7 +5,7 @@ import validationScores from '../constans/validationScores'
 import MainButton from './MainButton'
 
 export default function FormRegister ({ student, text = 'Update', callbackOnSubmit }) {
-  const { registerNumber, saberProScore, writtenCommunication, quantitativeReasoning, readingCritical, citizenshipCompetence, english, engineeringProjectFormulation, mathematicsStatistics, softwareDesign, denied, id } = student
+  const { registerNumber, saberProScore, writtenCommunication, quantitativeReasoning, readingCritical, citizenshipCompetence, english, engineeringProjectFormulation, mathematicsStatistics, softwareDesign, denied, id } = student || {}
 
   const { formState: { errors }, register, reset, handleSubmit } = useForm({
     defaultValues: {
@@ -37,6 +37,7 @@ export default function FormRegister ({ student, text = 'Update', callbackOnSubm
 
     const objectRequest = Object.fromEntries(newValues)
     const newData = await callbackOnSubmit(objectRequest, id)
+    if (!newData) return
     reset({
       ...newData
     })
@@ -51,10 +52,10 @@ export default function FormRegister ({ student, text = 'Update', callbackOnSubm
           name='registerNumber'
           label='Register Number'
           type='text'
-          placeholder=''
+          placeholder='K-123456'
           variants={itemVariants}
           validation={validationScores}
-          disabled
+          disabled={registerNumber}
         />
         <Input
           errors={errors}

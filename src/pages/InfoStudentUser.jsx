@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import useGetStudent from '../customHooks/useGetStudent'
 import Loadings from '../components/Loadings'
 import PersonalInformationForm from '../components/PersonalInformationForm'
@@ -8,12 +8,14 @@ import FormRegister from '../components/FormRegister'
 import { UserContext } from '../providers/UserProvider'
 import { motion } from 'framer-motion'
 import { itemVariants, variantsForm } from '../constans/variantsForm'
+import DeniedButton from '../components/DeniedButton'
 
 export default function InfoStudentUser () {
   const { id } = useParams()
   const { loading, user } = useGetStudent(id)
   const { student } = user
   const { updateScore } = useContext(UserContext)
+  const navigate = useNavigate()
 
   if (loading) return <Loadings />
 
@@ -42,6 +44,13 @@ export default function InfoStudentUser () {
           Scores:
         </motion.h2>
         <FormRegister student={student} callbackOnSubmit={updateScore} />
+        <DeniedButton
+          callback={() => navigate('/admin/list-registers')}
+          denied={false}
+          studentId={student.id}
+          initialStateModal={student.denied}
+          title='This user is denied, do you want let out this denied?'
+        />
       </BoxInfo>
     </motion.div>
   )

@@ -12,7 +12,6 @@ import { UserContext } from '../providers/UserProvider'
 
 export default function PersonalInformationForm ({ user, callback, isEdit = true, submitButton }) {
   const { user: userLog } = useContext(UserContext)
-  console.log({ user })
   const { typeDocument, student, documentId, firstName, firstSurname, email } = user || {}
   const infoStudent = student || {}
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
@@ -40,10 +39,8 @@ export default function PersonalInformationForm ({ user, callback, isEdit = true
       }
     }
 
-    console.log({ data })
-
     const newUser = await callback(data, user, userLog.id)
-    const { newStudent } = newUser.student || {}
+    const { newStudent } = newUser?.student || {}
     reset({
       ...newUser,
       ...newStudent
@@ -63,7 +60,7 @@ export default function PersonalInformationForm ({ user, callback, isEdit = true
           placeholder='Brayan'
           variants={itemVariants}
           validation={validationPersonalInformation}
-          disabled={(isEdit && !edit) || (firstName && !edit)}
+          disabled={(!submitButton && !isEdit) || (isEdit && !edit) || (firstName && !edit)}
         />
         <Input
           errors={errors}
@@ -74,7 +71,7 @@ export default function PersonalInformationForm ({ user, callback, isEdit = true
           placeholder='Villamizar'
           variants={itemVariants}
           validation={validationPersonalInformation}
-          disabled={(isEdit && !edit) || (firstSurname && !edit)}
+          disabled={(!submitButton && !isEdit) || (isEdit && !edit) || (firstSurname && !edit)}
         />
         <RenderConditional condition={student}>
           <Input
@@ -86,7 +83,7 @@ export default function PersonalInformationForm ({ user, callback, isEdit = true
             placeholder='Esteban'
             variants={itemVariants}
             validation={validationPersonalInformation}
-            disabled={(isEdit && !edit) || (infoStudent.middleName && !edit)}
+            disabled={(!submitButton && !isEdit) || (isEdit && !edit) || (infoStudent.middleName && !edit)}
           />
           <Input
             errors={errors}
@@ -97,7 +94,7 @@ export default function PersonalInformationForm ({ user, callback, isEdit = true
             placeholder='Fernandez'
             variants={itemVariants}
             validation={validationPersonalInformation}
-            disabled={(isEdit && !edit) || (infoStudent.lastSurname && !edit)}
+            disabled={(!submitButton && !isEdit) || (isEdit && !edit) || (infoStudent.lastSurname && !edit)}
           />
         </RenderConditional>
         <Input
@@ -109,7 +106,7 @@ export default function PersonalInformationForm ({ user, callback, isEdit = true
           placeholder='Youremail@domain.com'
           variants={itemVariants}
           validation={validationPersonalInformation}
-          disabled={(isEdit && !edit) || (email && !edit)}
+          disabled={(!submitButton && !isEdit) || (isEdit && !edit) || (email && !edit)}
         />
         <RenderConditional condition={student}>
           <Input
@@ -121,7 +118,7 @@ export default function PersonalInformationForm ({ user, callback, isEdit = true
             placeholder='3167324940'
             variants={itemVariants}
             validation={validationPersonalInformation}
-            disabled={(isEdit && !edit) || (infoStudent.phone && !edit)}
+            disabled={(!submitButton && !isEdit) || (isEdit && !edit) || (infoStudent.phone && !edit)}
           />
         </RenderConditional>
         <RenderConditional condition={documentId}>
@@ -145,7 +142,7 @@ export default function PersonalInformationForm ({ user, callback, isEdit = true
             variants={itemVariants}
             validation={validationPersonalInformation}
             label='Type Document'
-            disabled={(isEdit && !edit) || (typeDocument && !edit)}
+            disabled={(!submitButton && !isEdit) || (isEdit && !edit) || (typeDocument && !edit)}
           >
             <TypeDocumentsOptions />
           </Select>

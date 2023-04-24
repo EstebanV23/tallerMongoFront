@@ -5,7 +5,6 @@ import validationRegisterInputs from '../constans/validationRegisterInputs'
 import { UserContext } from '../providers/UserProvider'
 import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import VisiblePassword from './VisiblePassword'
 import MainButton from './MainButton'
 import useRestartError from '../customHooks/useRestartError'
 import TypeDocumentsOptions from './TypeDocumentsOptions'
@@ -45,7 +44,7 @@ export default function RegisterForm () {
         exit='initial'
         className='flex flex-col gap-3 w-full items-stretch transition-all duration-300 ease-in-out p-4'
       >
-        <motion.p variants={itemVariants} className='text-sm text-gray-500'>Rebember: you account have the email that you register in PruebaSaberPro and did create with your document id as password, if you try to create one account and your document id already account, you should contact us for recover your account</motion.p>
+        <motion.p variants={itemVariants} className='text-sm text-gray-500'>Rebember: your account have the email that you register in PruebaSaberPro and did create with your document id as password, if you try to create one account and your document id already account, you should contact us for recover your account</motion.p>
         <motion.p variants={itemVariants} className='text-sm text-gray-500'>* Fields are required</motion.p>
         <Input
           errors={errors}

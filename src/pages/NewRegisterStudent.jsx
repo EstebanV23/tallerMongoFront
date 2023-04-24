@@ -6,6 +6,9 @@ import { UserContext } from '../providers/UserProvider'
 import useUsersAvailables from '../customHooks/useUsersAvailables'
 import RenderConditional from '../components/RenderConditional'
 import BoxInfo from '../components/BoxInfo'
+import SecondaryButton from '../components/SecondaryButton'
+import FormRegister from '../components/FormRegister'
+import { useNavigate } from 'react-router-dom'
 
 const RenderAvailablesUsers = ({ users }) => {
   return users.map((user) => (
@@ -15,11 +18,12 @@ const RenderAvailablesUsers = ({ users }) => {
 
 export default function NewRegisterStudent () {
   const [userSelected, setUserSelecter] = useState('new')
-  const [selectTempUser, setSelectTempUser] = useState(null)
+  const [selectTempUser, setSelectTempUser] = useState('new')
   const [openModal, setOpenModal] = useState(true)
   const userAvailables = useUsersAvailables()
-  const { loading } = useContext(UserContext)
+  const { loading, newUser, newStudent } = useContext(UserContext)
   const [dispacher, setDispacher] = useState(0)
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!userSelected || userSelected === 'new') return
@@ -32,6 +36,18 @@ export default function NewRegisterStudent () {
     setUserSelecter(selectTempUser)
     setOpenModal(false)
     setDispacher(dispacher + 1)
+  }
+
+  async function createStudentUser (data) {
+    const response = await newStudent(data, userSelected.id, `${userSelected.firstName} ${userSelected.firstSurname}`)
+    if (!response.error) {
+      navigate('/admin/list-registers')
+    }
+  }
+
+  async function acceptInfo (data) {
+    const userUpdate = await newUser(data.userInfo)
+    if (!userUpdate.error) setUserSelecter(userUpdate)
   }
 
   if (loading) return null
@@ -59,10 +75,21 @@ export default function NewRegisterStudent () {
       <BoxInfo>
         <RenderConditional condition={typeof userSelected !== 'string'}>
           <PersonalInformationForm user={userSelected} isEdit={false} />
+          <div className='mt-5'>
+            <FormRegister student={userSelected.student} text='Create' callbackOnSubmit={createStudentUser} />
+          </div>
         </RenderConditional>
         <RenderConditional condition={userSelected === 'new'}>
-          <PersonalInformationForm isEdit={false} submitButton={<MainButton text='Create' type='submit' className='mt-10'/>} />
+          <PersonalInformationForm isEdit={false} submitButton={<MainButton text='Create' type='submit' className='mt-10' />} callback={acceptInfo} />
         </RenderConditional>
+        <SecondaryButton
+          color='blue' className='mt-6' onClick={() => {
+            setOpenModal(true)
+            setUserSelecter('new')
+            setSelectTempUser('new')
+          }}
+        >Select other user
+        </SecondaryButton>
       </BoxInfo>
     </>
   )
