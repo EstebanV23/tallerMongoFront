@@ -15,7 +15,7 @@ export default function AdminMain () {
       <BoxInfo className='mb-3'>
         <motion.h2 variants={itemVariants} className='text-2xl font-medium mb-3'>Your Information</motion.h2>
         <PersonalInformationForm user={user} callback={updateInfoUserStudent} />
-        <motion.div variants={itemVariants} className='flex items-center'>
+        <motion.div variants={itemVariants} className='flex flex-col items-center sm:flex-row'>
           <h2 className='text-2xl font-medium'>Actions:</h2>
           <Links />
         </motion.div>
