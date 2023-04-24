@@ -1,16 +1,19 @@
-import { useContext } from 'react'
+
 import { useForm } from 'react-hook-form'
 import Input, { Select } from './Input'
-import { UserContext } from '../providers/UserProvider'
 import { itemVariants } from '../constans/variantsForm'
 import RenderConditional from './RenderConditional'
 import validationPersonalInformation from '../constans/validationPersonalInformation'
 import SecondaryButton from './SecondaryButton'
 import useEdit from '../customHooks/useEdit'
 import TypeDocumentsOptions from './TypeDocumentsOptions'
+import { useContext } from 'react'
+import { UserContext } from '../providers/UserProvider'
 
-export default function PersonalInformationForm ({ user, callback }) {
-  const { firstName, firstSurname, email, typeDocument, documentId, student } = user
+export default function PersonalInformationForm ({ user, callback, isEdit = true, submitButton }) {
+  const { user: userLog } = useContext(UserContext)
+  console.log({ user })
+  const { typeDocument, student, documentId, firstName, firstSurname, email } = user || {}
   const infoStudent = student || {}
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
     defaultValues: {
@@ -37,7 +40,9 @@ export default function PersonalInformationForm ({ user, callback }) {
       }
     }
 
-    const newUser = await callback(data, user)
+    console.log({ data })
+
+    const newUser = await callback(data, user, userLog.id)
     const { newStudent } = newUser.student || {}
     reset({
       ...newUser,
@@ -55,10 +60,10 @@ export default function PersonalInformationForm ({ user, callback }) {
           name='firstName'
           label='First Name'
           type='text'
-          placeholder={firstName}
+          placeholder='Brayan'
           variants={itemVariants}
           validation={validationPersonalInformation}
-          disabled={!edit}
+          disabled={(isEdit && !edit) || (firstName && !edit)}
         />
         <Input
           errors={errors}
@@ -66,10 +71,10 @@ export default function PersonalInformationForm ({ user, callback }) {
           name='firstSurname'
           label='First Surname'
           type='text'
-          placeholder={firstSurname}
+          placeholder='Villamizar'
           variants={itemVariants}
           validation={validationPersonalInformation}
-          disabled={!edit}
+          disabled={(isEdit && !edit) || (firstSurname && !edit)}
         />
         <RenderConditional condition={student}>
           <Input
@@ -78,10 +83,10 @@ export default function PersonalInformationForm ({ user, callback }) {
             name='middleName'
             label='Middle Name'
             type='text'
-            placeholder={infoStudent.middleName}
+            placeholder='Esteban'
             variants={itemVariants}
             validation={validationPersonalInformation}
-            disabled={!edit}
+            disabled={(isEdit && !edit) || (infoStudent.middleName && !edit)}
           />
           <Input
             errors={errors}
@@ -89,10 +94,10 @@ export default function PersonalInformationForm ({ user, callback }) {
             name='lastSurname'
             label='lastSurname'
             type='text'
-            placeholder={infoStudent.lastSurname}
+            placeholder='Fernandez'
             variants={itemVariants}
             validation={validationPersonalInformation}
-            disabled={!edit}
+            disabled={(isEdit && !edit) || (infoStudent.lastSurname && !edit)}
           />
         </RenderConditional>
         <Input
@@ -101,10 +106,10 @@ export default function PersonalInformationForm ({ user, callback }) {
           name='email'
           label='Email'
           type='text'
-          placeholder={email}
+          placeholder='Youremail@domain.com'
           variants={itemVariants}
           validation={validationPersonalInformation}
-          disabled={!edit}
+          disabled={(isEdit && !edit) || (email && !edit)}
         />
         <RenderConditional condition={student}>
           <Input
@@ -113,13 +118,13 @@ export default function PersonalInformationForm ({ user, callback }) {
             name='phone'
             label='Phone'
             type='text'
-            placeholder={infoStudent.phone}
+            placeholder='3167324940'
             variants={itemVariants}
             validation={validationPersonalInformation}
-            disabled={!edit}
+            disabled={(isEdit && !edit) || (infoStudent.phone && !edit)}
           />
         </RenderConditional>
-        <RenderConditional condition={user.documentId}>
+        <RenderConditional condition={documentId}>
           <Input
             errors={errors}
             register={register}
@@ -132,15 +137,15 @@ export default function PersonalInformationForm ({ user, callback }) {
             disabled
           />
         </RenderConditional>
-        <RenderConditional condition={!user.documentId}>
+        <RenderConditional condition={!documentId}>
           <Select
             errors={errors}
             name='typeDocument'
             register={register}
             variants={itemVariants}
             validation={validationPersonalInformation}
-            label='* Type Document'
-            disabled={!edit}
+            label='Type Document'
+            disabled={(isEdit && !edit) || (typeDocument && !edit)}
           >
             <TypeDocumentsOptions />
           </Select>
@@ -151,22 +156,26 @@ export default function PersonalInformationForm ({ user, callback }) {
           name='documentId'
           label='Document'
           type='text'
-          placeholder={documentId}
+          placeholder='123456789'
           variants={itemVariants}
           validation={validationPersonalInformation}
-          disabled={user.documentId}
+          disabled={documentId}
         />
       </div>
-      <div className='flex justify-end gap-3 mt-3'>
-        {
-        !edit
-          ? <SecondaryButton variants={itemVariants} type='button' onClick={() => setEdit(true)}>Edit</SecondaryButton>
-          : <>
-            <SecondaryButton type='button' color='red' onClick={() => setEdit(false)}>Cancel</SecondaryButton>
-            <SecondaryButton type='submit'>save</SecondaryButton>
-            </>
-}
-      </div>
+      <RenderConditional condition={isEdit}>
+        <div className='flex justify-end gap-3 mt-3'>
+          {!edit
+            ? <SecondaryButton variants={itemVariants} type='button' onClick={() => setEdit(true)}>Edit</SecondaryButton>
+            : <>
+              <SecondaryButton type='button' color='red' onClick={() => setEdit(false)}>Cancel</SecondaryButton>
+              <SecondaryButton type='submit'>save</SecondaryButton>
+            </>}
+
+        </div>
+      </RenderConditional>
+      <RenderConditional condition={!isEdit}>
+        {submitButton}
+      </RenderConditional>
     </form>
   )
 }

@@ -7,6 +7,9 @@ import getRole from '../services/getRole'
 import registerService from '../services/registerService'
 import updateUser from '../services/updateUser'
 import updateStudentInfo from '../services/updateStudentInfo'
+import updateScoreStudent from '../services/updateScoreStudent'
+import deleteStudent from '../services/deleteStudent'
+import getAvailablesUsers from '../services/getAvailablesUsers'
 
 export const UserContext = createContext()
 
@@ -51,7 +54,35 @@ export default function UserProvider ({ children }) {
     dataLogin.role.nameId === ADMIN ? navigate('/admin') : navigate('/student')
   }
 
+  const updateInfoStudentFromInfo = async (values, user) => {
+    let userReturn = user
+    try {
+      setLoading(true)
+      const { userInfo, studentInfo } = values
+      const responseUser = await updateUser(user.id, userInfo)
+      if (responseUser.error) throw new Error(responseUser.error)
+      const newUser = { ...responseUser }
+      userReturn = newUser
+      if (!user.student) {
+        setAlertActive({ message: 'User update successfully', type: 'success' })
+        return userReturn
+      }
+      const responseStudent = await updateStudentInfo(user.student.id, studentInfo)
+      if (responseStudent.error) throw new Error(responseStudent.error)
+      const newStudent = { ...responseStudent }
+      const userFinally = { ...newUser, student: newStudent }
+      userReturn = userFinally
+      setAlertActive({ message: 'User update successfully', type: 'success' })
+    } catch (error) {
+      setAlertActive({ message: error.message, type: 'error' })
+    } finally {
+      setLoading(false)
+    }
+    return userReturn
+  }
+
   const updateInfoUserStudent = async (values, user) => {
+    console.log({ values })
     let userReturn = user
     try {
       setLoading(true)
@@ -97,6 +128,31 @@ export default function UserProvider ({ children }) {
     navigate('/')
   }
 
+  const updateScore = async (data, studentId) => {
+    setLoading(true)
+    const response = await updateScoreStudent(data, studentId, user.id)
+    setLoading(false)
+    response.error
+      ? setAlertActive({ message: response.error, type: 'error' })
+      : setAlertActive({ message: 'Information updated successfully', type: 'success' })
+  }
+
+  const deleteRegister = async (studentId, userId) => {
+    setLoading(true)
+    const response = await deleteStudent(studentId, userId, user.id)
+    setLoading(false)
+    response.error
+      ? setAlertActive({ message: response.error, type: 'error' })
+      : setAlertActive({ message: 'Delete successfully', type: 'success' })
+  }
+
+  const availablesUser = async () => {
+    setLoading(true)
+    const data = await getAvailablesUsers(user.id)
+    setLoading(false)
+    return data
+  }
+
   const logOut = () => {
     localStorage.removeItem('user')
     setUser(null)
@@ -118,7 +174,12 @@ export default function UserProvider ({ children }) {
     alertActive,
     setAlertActive,
     resetAlert,
-    updateInfoUserStudent
+    updateInfoUserStudent,
+    updateInfoStudentFromInfo,
+    updateScore,
+    deleteRegister,
+    availablesUser,
+    loading
   }
 
   return (

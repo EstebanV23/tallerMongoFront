@@ -12,6 +12,8 @@ import ProtectionStudent from '../components/ProtectionStudent'
 import ProtectedExistUser from '../components/ProtectedExistUser'
 import AdminMain from './AdminMain'
 import AdminListRegister from './AdminListRegister'
+import InfoStudentUser from './InfoStudentUser'
+import NewRegisterStudent from './NewRegisterStudent'
 
 export default function MainPage () {
   const { alertActive } = useContext(UserContext)
@@ -24,7 +26,8 @@ export default function MainPage () {
           <Route path='/admin' element={<ProtectionAdmin><AdminPage /></ProtectionAdmin>}>
             <Route index element={<AdminMain />} />
             <Route path='list-registers' element={<AdminListRegister />} />
-            <Route path='new-register' element={<h1>New Register</h1>} />
+            <Route path='new-register' element={<NewRegisterStudent />} />
+            <Route path='student/:id' element={<InfoStudentUser />} />
           </Route>
         </Route>
       </Routes>

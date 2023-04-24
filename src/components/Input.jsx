@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 
-export default function Input ({ type, register, errors, label, placeholder, name, validation, disabled = false, variants, callback = null, ...props }) {
-  const { validate, messages } = validation[name] || { validate: '', messages: '' }
+export default function Input ({ type, register, errors, label, placeholder, name, all = false, validation, disabled = false, variants, callback = null, ...props }) {
+  const { validate, messages } = all ? validation.all : validation[name] || { validate: '', messages: '' }
   const error = errors[name]
 
   if (validate.validate) {

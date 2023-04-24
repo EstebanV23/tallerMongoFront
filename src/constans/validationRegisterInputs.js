@@ -9,30 +9,6 @@ const validationRegisterInputs = {
       pattern: 'Bad email format. Example: Youremail@domain.com'
     }
   },
-  password: {
-    validate: {
-      required: true,
-      minLength: 8
-    },
-    messages: {
-      required: 'Password is required',
-      minLength: 'The password must be at least 8 characters long'
-    }
-  },
-  confirmPassword: {
-    validate: {
-      required: true,
-      validate: function (cb) {
-        return (values) => {
-          cb(values)
-        }
-      }
-    },
-    messages: {
-      required: 'Password is required',
-      validate: 'Passwords do not match'
-    }
-  },
   documentId: {
     validate: {
       required: true,

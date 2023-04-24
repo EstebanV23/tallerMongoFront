@@ -3,6 +3,7 @@ import { variantsNavbar } from '../constans/variantsNavbar'
 import { NavbarContext } from '../providers/NavbarProvider'
 import { useContext } from 'react'
 import Links from './Links'
+import Backdrop from './Backdrop'
 
 export default function NavbarMobile () {
   const { setIsOpen } = useContext(NavbarContext)
@@ -20,7 +21,7 @@ export default function NavbarMobile () {
           <Links />
         </div>
       </motion.nav>
-      <div className='fixed w-screen h-screen z-20 bg-black bg-opacity-30' />
+      <Backdrop onClick={() => setIsOpen(false)} />
     </>
   )
 }
